@@ -23,6 +23,7 @@ public class Main {
         while (!((checkWinCircles(circles) || checkWinCrosses(crosses)) || (circles | crosses) == 511)){
             printBoardAskInput();
             if (checkWinCircles(circles) || checkWinCrosses(crosses) || (circles | crosses) == 511) {
+                drawBoard();
                 break;
             }
             doBestMove();
