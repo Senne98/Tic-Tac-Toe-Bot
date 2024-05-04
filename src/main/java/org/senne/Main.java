@@ -43,14 +43,14 @@ public class Main {
     static void doBestMove() {
         long time = System.currentTimeMillis();
 
-        byte alpha = Byte.MIN_VALUE;
-        byte beta = Byte.MAX_VALUE;
+        int alpha = Byte.MIN_VALUE;
+        int beta = Byte.MAX_VALUE;
 
-        byte bestMove = -1;
-        byte bestEval = -1;
-        for (byte i = 0; i < 9; i++) {
-            if (((int) Math.pow(2, i) & (circles | crosses)) == 0) {
-                byte eval = minimax(circles | ((int) Math.pow(2, i)), crosses, alpha, beta, (byte) 1, false);
+        int bestMove = -1;
+        int bestEval = -1;
+        for (int i = 1; i < 257; i = i << 1) {
+            if ((i & (circles | crosses)) == 0) {
+                int eval = minimax(circles | i, crosses, alpha, beta, 1, false);
                 if (eval >= bestEval) {
                     bestEval = eval;
                     bestMove = i;
@@ -61,11 +61,11 @@ public class Main {
         System.out.println("Time: " + (System.currentTimeMillis() - time) + "ms");
         System.out.println("Checks: " + checks);
         checks = 0;
-        circles = circles | ((int) Math.pow(2, bestMove));
-        System.out.println("Computer placed O at " + (bestMove + 1));
+        circles = circles | (bestMove);
+        System.out.println("Computer placed O at " + (int)(Math.log(bestMove) / Math.log(2) + 1));
     }
 
-    static byte minimax(int circles, int crosses, byte alpha, byte beta, byte i, boolean moveO) {
+    static int minimax(int circles, int crosses, int alpha, int beta, int i, boolean moveO) {
         checks++;
 
         if (checkWinCircles(circles)) {
@@ -83,13 +83,13 @@ public class Main {
         }
 
         if (!moveO) {
-            byte minEval = Byte.MAX_VALUE;
-            for (int j = 0; j < 9; j++) {
-                if (((int) Math.pow(2, j) & (circles | crosses)) == 0) {
-                    byte eval = minimax(circles, crosses | ((int) Math.pow(2, j)), alpha, beta, (byte) (i + 1), true);
-                    minEval = (byte) Math.min(minEval, eval);
+            int minEval = Integer.MAX_VALUE;
+            for (int j = 1; j < 257; j = j << 1) {
+                if ((j & (circles | crosses)) == 0) {
+                    int eval = minimax(circles, crosses | j, alpha, beta, (i + 1), true);
+                    minEval = Math.min(minEval, eval);
 
-                    beta = (byte) Math.min(beta, minEval);
+                    beta = Math.min(beta, minEval);
                     if (minEval <= alpha) {
                         return minEval;
                     }
@@ -99,13 +99,13 @@ public class Main {
         }
 
         if (moveO) {
-            byte maxEval = Byte.MIN_VALUE;
-            for (int j = 0; j < 9; j++) {
-                if (((int) Math.pow(2, j) & (circles | crosses)) == 0) {
-                    int eval = minimax(circles | ((int) Math.pow(2, j)), crosses, alpha, beta, (byte) (i + 1), false);
-                    maxEval = (byte) Math.max(maxEval, eval);
+            int maxEval = Integer.MIN_VALUE;
+            for (int j = 1; j < 257; j = j << 1) {
+                if ((j & (circles | crosses)) == 0) {
+                    int eval = minimax(circles | j, crosses, alpha, beta, (i + 1), false);
+                    maxEval = Math.max(maxEval, eval);
 
-                    alpha = (byte) Math.max(alpha, maxEval);
+                    alpha = Math.max(alpha, maxEval);
                     if (maxEval >= beta) {
                         return maxEval;
                     }
