@@ -1,5 +1,6 @@
 package org.senne;
 
+import java.io.Console;
 import java.io.IOException;
 import java.util.Scanner;
 
@@ -191,9 +192,9 @@ public class Main {
 
         for (int i = 0; i < 9; i++) {
             if ((circles & (1 << i)) == (1 << i)) {
-                spots[i] = "O";
+                spots[i] = "\033[0;31m" + "O" + "\033[0m";
             } else if ((crosses & (1 << i)) == (1 << i)) {
-                spots[i] = "X";
+                spots[i] = "\033[0;32m" + "X" + "\033[0m";
             } else {
                 spots[i] = Integer.toString(i + 1);
             }
